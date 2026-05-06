@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HackLearn — Belajar Cybersecurity</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#060a0f;
+  --surface:#0d1117;
+  --surface2:#161b22;
+  --border:#21262d;
+  --green:#00ff88;
+  --green2:#00cc6a;
+  --cyan:#00d4ff;
+  --red:#ff4757;
+  --yellow:#ffd32a;
+  --text:#e6edf3;
+  --muted:#7d8590;
+  --radius:8px;
+}
+body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* SCANLINE OVERLAY */
+body::before{
+  content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,136,0.015) 2px,rgba(0,255,136,0.015) 4px);
+  pointer-events:none;z-index:9999;
+}
+
+/* HEADER */
+header{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding:16px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.logo{font-family:'Share Tech Mono',monospace;font-size:22px;color:var(--green);}
+.logo span{color:var(--cyan);}
+.logo-sub{font-size:11px;color:var(--muted);letter-spacing:2px;margin-top:2px;}
+
+/* NAV */
+nav{display:flex;gap:4px;}
+.nav-btn{
+  background:transparent;border:1px solid var(--border);
+  color:var(--muted);font-family:'Exo 2',sans-serif;font-size:13px;font-weight:600;
+  padding:7px 16px;border-radius:var(--radius);cursor:pointer;
+  transition:all .2s;letter-spacing:.5px;
+}
+.nav-btn:hover{border-color:var(--green);color:var(--green);}
+.nav-btn.active{background:rgba(0,255,136,0.1);border-color:var(--green);color:var(--green);}
+
+/* MAIN */
+main{max-width:900px;margin:0 auto;padding:32px 24px;}
+
+/* SECTION */
+.section{display:none;}
+.section.active{display:block;}
+
+/* HERO */
+.hero{text-align:center;padding:40px 0 32px;}
+.hero-tag{
+  display:inline-block;
+  font-family:'Share Tech Mono',monospace;font-size:11px;
+  color:var(--green);border:1px solid var(--green);
+  padding:4px 14px;border-radius:4px;letter-spacing:2px;margin-bottom:20px;
+}
+.hero h1{font-size:42px;font-weight:800;line-height:1.1;margin-bottom:12px;}
+.hero h1 span{color:var(--green);}
+.hero p{color:var(--muted);font-size:16px;max-width:480px;margin:0 auto 28px;}
+.hero-stats{display:flex;justify-content:center;gap:32px;}
+.stat{text-align:center;}
+.stat-num{font-family:'Share Tech Mono',monospace;font-size:28px;color:var(--cyan);}
+.stat-label{font-size:12px;color:var(--muted);letter-spacing:1px;}
+
+/* CARDS GRID */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin-top:24px;}
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:20px;cursor:pointer;
+  transition:all .2s;position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--green),var(--cyan));
+  opacity:0;transition:.2s;
+}
+.card:hover{border-color:var(--green);transform:translateY(-2px);}
+.card:hover::before{opacity:1;}
+.card-icon{font-size:28px;margin-bottom:12px;}
+.card-title{font-size:16px;font-weight:700;margin-bottom:6px;}
+.card-desc{font-size:13px;color:var(--muted);line-height:1.6;}
+.card-badge{
+  display:inline-block;margin-top:12px;
+  font-size:11px;font-weight:600;letter-spacing:1px;
+  padding:3px 10px;border-radius:4px;
+}
+.badge-easy{background:rgba(0,255,136,0.1);color:var(--green);}
+.badge-med{background:rgba(0,212,255,0.1);color:var(--cyan);}
+.badge-hard{background:rgba(255,71,87,0.1);color:var(--red);}
+
+/* MATERI DETAIL */
+.materi-detail{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;}
+.materi-detail h2{font-size:24px;font-weight:800;margin-bottom:8px;}
+.materi-detail p{color:var(--muted);line-height:1.7;margin-bottom:16px;}
+.materi-detail .term{
+  background:var(--surface2);border:1px solid var(--border);
+  border-left:3px solid var(--green);
+  border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;
+}
+.materi-detail .term strong{color:var(--green);font-family:'Share Tech Mono',monospace;font-size:14px;}
+.materi-detail .term p{color:var(--text);font-size:14px;margin:4px 0 0;line-height:1.6;}
+.back-btn{
+  background:transparent;border:1px solid var(--border);
+  color:var(--muted);font-family:'Exo 2',sans-serif;font-size:13px;
+  padding:8px 16px;border-radius:var(--radius);cursor:pointer;
+  margin-bottom:20px;display:inline-flex;align-items:center;gap:6px;
+  transition:.2s;
+}
+.back-btn:hover{border-color:var(--green);color:var(--green);}
+
+/* KUIS */
+.quiz-wrap{max-width:600px;margin:0 auto;}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;}
+.progress-bar{flex:1;height:6px;background:var(--surface2);border-radius:3px;margin:0 16px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--cyan));border-radius:3px;transition:.4s;}
+.quiz-q{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:28px;margin-bottom:20px;
+}
+.quiz-q h3{font-size:18px;font-weight:700;margin-bottom:6px;}
+.quiz-q .q-num{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted);margin-bottom:12px;}
+.quiz-q p{font-size:15px;line-height:1.6;color:var(--text);}
+.options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text);font-family:'Exo 2',sans-serif;font-size:14px;font-weight:500;
+  padding:14px 18px;border-radius:var(--radius);cursor:pointer;
+  text-align:left;transition:.2s;
+}
+.option-btn:hover:not(:disabled){border-color:var(--cyan);color:var(--cyan);background:rgba(0,212,255,0.05);}
+.option-btn.correct{background:rgba(0,255,136,0.1);border-color:var(--green);color:var(--green);}
+.option-btn.wrong{background:rgba(255,71,87,0.1);border-color:var(--red);color:var(--red);}
+.option-btn:disabled{cursor:default;}
+.feedback{
+  padding:12px 16px;border-radius:var(--radius);margin-top:12px;
+  font-size:14px;font-weight:600;line-height:1.5;
+}
+.feedback.correct{background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.3);color:var(--green);}
+.feedback.wrong{background:rgba(255,71,87,0.08);border:1px solid rgba(255,71,87,0.3);color:var(--red);}
+.next-btn{
+  background:var(--green);color:#000;font-family:'Exo 2',sans-serif;
+  font-size:14px;font-weight:700;border:none;
+  padding:12px 28px;border-radius:var(--radius);cursor:pointer;
+  margin-top:16px;letter-spacing:.5px;transition:.2s;
+}
+.next-btn:hover{background:var(--green2);}
+.score-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:40px;text-align:center;
+}
+.score-num{font-family:'Share Tech Mono',monospace;font-size:64px;color:var(--green);}
+.score-label{color:var(--muted);font-size:15px;margin-top:4px;}
+.score-msg{font-size:18px;font-weight:700;margin:20px 0 8px;}
+
+/* CHATBOT */
+.chat-wrap{max-width:680px;margin:0 auto;}
+.chat-header{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius) var(--radius) 0 0;
+  padding:16px 20px;display:flex;align-items:center;gap:12px;
+}
+.bot-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--green),var(--cyan));
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.bot-name{font-weight:700;font-size:15px;}
+.bot-status{font-size:12px;color:var(--green);}
+.online-dot{display:inline-block;width:7px;height:7px;background:var(--green);border-radius:50%;margin-right:5px;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.chat-body{
+  background:var(--surface);border:1px solid var(--border);border-top:none;
+  height:420px;overflow-y:auto;padding:20px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.msg{max-width:80%;display:flex;flex-direction:column;gap:4px;}
+.msg.bot{align-self:flex-start;}
+.msg.user{align-self:flex-end;}
+.msg-bubble{
+  padding:12px 16px;border-radius:12px;font-size:14px;line-height:1.6;
+}
+.msg.bot .msg-bubble{
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--text);border-radius:4px 12px 12px 12px;
+}
+.msg.user .msg-bubble{
+  background:rgba(0,255,136,0.12);border:1px solid rgba(0,255,136,0.25);
+  color:var(--text);border-radius:12px 4px 12px 12px;
+}
+.msg-time{font-size:11px;color:var(--muted);}
+.msg.user .msg-time{text-align:right;}
+.typing-indicator{display:flex;gap:4px;align-items:center;padding:12px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:4px 12px 12px 12px;width:fit-content;}
+.typing-dot{width:6px;height:6px;background:var(--muted);border-radius:50%;animation:typing .8s infinite;}
+.typing-dot:nth-child(2){animation-delay:.15s;}
+.typing-dot:nth-child(3){animation-delay:.3s;}
+@keyframes typing{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+.chat-footer{
+  background:var(--surface);border:1px solid var(--border);border-top:none;
+  border-radius:0 0 var(--radius) var(--radius);
+  padding:14px 16px;display:flex;gap:10px;align-items:center;
+}
+.chat-input{
+  flex:1;background:var(--surface2);border:1px solid var(--border);
+  color:var(--text);font-family:'Exo 2',sans-serif;font-size:14px;
+  padding:10px 16px;border-radius:var(--radius);outline:none;transition:.2s;
+}
+.chat-input:focus{border-color:var(--green);}
+.chat-input::placeholder{color:var(--muted);}
+.send-btn{
+  background:var(--green);color:#000;border:none;
+  width:40px;height:40px;border-radius:var(--radius);
+  cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;
+  transition:.2s;flex-shrink:0;
+}
+.send-btn:hover{background:var(--green2);}
+.quick-questions{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+.quick-q{
+  background:var(--surface2);border:1px solid var(--border);
+  color:var(--muted);font-family:'Exo 2',sans-serif;font-size:12px;
+  padding:5px 12px;border-radius:20px;cursor:pointer;transition:.2s;
+}
+.quick-q:hover{border-color:var(--green);color:var(--green);}
+
+/* SECTION TITLE */
+.section-title{
+  font-size:22px;font-weight:800;margin-bottom:6px;
+}
+.section-title span{color:var(--green);}
+.section-sub{color:var(--muted);font-size:14px;margin-bottom:24px;}
+
+/* LOADING */
+.loading-msg{
+  color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:13px;
+  display:flex;align-items:center;gap:8px;
+}
+.spinner{
+  width:14px;height:14px;border:2px solid var(--border);
+  border-top-color:var(--green);border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--surface);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:var(--muted);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.fadeUp{animation:fadeUp .35s ease both;}
+
+/* ===== LIGHT MODE ===== */
+body.light{
+  --bg:#f0f4f8;
+  --surface:#ffffff;
+  --surface2:#e8ecf1;
+  --border:#d0d7de;
+  --text:#1c2128;
+  --muted:#57606a;
+}
+body.light header{box-shadow:0 1px 4px rgba(0,0,0,0.08);}
+body.light .card{box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+body.light .option-btn{background:var(--surface2);}
+body.light::before{background:none;}
+
+/* THEME TOGGLE */
+.theme-toggle{
+  background:transparent;border:1px solid var(--border);
+  color:var(--text);font-size:16px;
+  width:38px;height:38px;border-radius:var(--radius);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;margin-left:4px;flex-shrink:0;
+}
+.theme-toggle:hover{border-color:var(--yellow);transform:rotate(20deg);}
+
+/* ===== CHALLENGE ===== */
+.challenge-wrap{max-width:680px;margin:0 auto;}
+.streak-bar{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;
+}
+.streak-info{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;}
+.streak-icon{font-size:22px;animation:wiggle 2s infinite;}
+@keyframes wiggle{0%,100%{transform:rotate(0);}20%{transform:rotate(-10deg);}40%{transform:rotate(10deg);}60%{transform:rotate(-6deg);}80%{transform:rotate(6deg);}}
+.streak-dots{display:flex;gap:6px;}
+.streak-dot{width:12px;height:12px;border-radius:50%;background:var(--border);transition:.3s;}
+.streak-dot.active{background:var(--yellow);box-shadow:0 0 6px var(--yellow);}
+
+.challenge-card-big{
+  background:var(--surface);border:1px solid rgba(255,211,42,0.3);
+  border-radius:var(--radius);padding:36px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.challenge-card-big::before{
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:200px;height:200px;
+  background:radial-gradient(circle,rgba(255,211,42,0.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+.challenge-badge-big{
+  display:inline-block;
+  font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;
+  background:rgba(255,211,42,0.1);color:var(--yellow);
+  border:1px solid rgba(255,211,42,0.3);
+  padding:4px 14px;border-radius:4px;
+}
+.challenge-meta-item{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:6px;padding:8px 16px;font-size:13px;font-weight:600;
+}
+.pulse-btn{animation:pulse-glow 2s infinite;}
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 0 0 rgba(0,255,136,0.4);}50%{box-shadow:0 0 0 10px rgba(0,255,136,0);}}
+
+/* CHALLENGE TIMER */
+.challenge-timer-wrap{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;
+}
+.timer-circle{
+  width:64px;height:64px;border-radius:50%;
+  background:conic-gradient(var(--green) 0%, var(--surface2) 0%);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;font-family:'Share Tech Mono',monospace;font-size:18px;font-weight:700;
+  transition:background .3s;
+}
+.timer-circle.warning{background:conic-gradient(var(--yellow) 0%, var(--surface2) 0%);}
+.timer-circle.danger{background:conic-gradient(var(--red) 0%, var(--surface2) 0%);}
+.timer-inner{
+  position:absolute;width:50px;height:50px;border-radius:50%;
+  background:var(--surface);display:flex;align-items:center;justify-content:center;
+  font-family:'Share Tech Mono',monospace;font-size:16px;
+}
+
+/* CHALLENGE RESULT */
+.result-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:40px;text-align:center;
+}
+.result-stars{font-size:40px;letter-spacing:4px;margin-bottom:16px;}
+.xp-badge{
+  display:inline-block;
+  background:rgba(255,211,42,0.1);color:var(--yellow);
+  border:1px solid rgba(255,211,42,0.3);
+  font-family:'Share Tech Mono',monospace;font-size:22px;font-weight:700;
+  padding:10px 28px;border-radius:8px;margin:16px 0;
+  animation:xp-pop .5s cubic-bezier(0.175,0.885,0.32,1.275) both;
+}
+@keyframes xp-pop{from{transform:scale(0.5);opacity:0;}to{transform:scale(1);opacity:1;}}
+
+/* BONUS ANIMATIONS */
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-20px);}to{opacity:1;transform:translateX(0);}}
+@keyframes glitch{
+  0%,100%{transform:translate(0);}
+  20%{transform:translate(-2px,1px);}
+  40%{transform:translate(2px,-1px);}
+  60%{transform:translate(-1px,2px);}
+  80%{transform:translate(1px,-2px);}
+}
+.logo:hover .logo-glitch{animation:glitch .3s linear infinite;}
+.card{animation:fadeUp .4s ease both;}
+.cards .card:nth-child(1){animation-delay:.05s;}
+.cards .card:nth-child(2){animation-delay:.1s;}
+.cards .card:nth-child(3){animation-delay:.15s;}
+.cards .card:nth-child(4){animation-delay:.2s;}
+.nav-btn{position:relative;overflow:hidden;}
+.nav-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.05),transparent);
+  transform:translateX(-100%);transition:.4s;
+}
+.nav-btn:hover::after{transform:translateX(100%);}
+
+/* PARTICLES */
+/* ===== CTF LAB ===== */
+.ctf-wrap{max-width:780px;margin:0 auto;}
+.ctf-grid{display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:start;}
+.ctf-sidebar{display:flex;flex-direction:column;gap:10px;}
+.ctf-challenge-btn{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px 16px;cursor:pointer;
+  text-align:left;transition:all .2s;position:relative;overflow:hidden;
+}
+.ctf-challenge-btn:hover{border-color:var(--cyan);transform:translateX(3px);}
+.ctf-challenge-btn.active{border-color:var(--cyan);background:rgba(0,212,255,0.06);}
+.ctf-challenge-btn.solved{border-color:var(--green);}
+.ctf-challenge-btn.solved::after{content:'✓';position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--green);font-weight:700;}
+.ctf-ch-title{font-size:13px;font-weight:700;margin-bottom:3px;}
+.ctf-ch-cat{font-size:11px;color:var(--muted);letter-spacing:1px;}
+.ctf-ch-pts{font-family:'Share Tech Mono',monospace;font-size:12px;margin-top:5px;}
+.ctf-ch-pts.easy{color:var(--green);}
+.ctf-ch-pts.medium{color:var(--yellow);}
+.ctf-ch-pts.hard{color:var(--red);}
+
+.ctf-main{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.ctf-main-header{
+  background:var(--surface2);border-bottom:1px solid var(--border);
+  padding:16px 20px;display:flex;align-items:center;justify-content:space-between;
+}
+.ctf-category-badge{
+  font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:1.5px;
+  padding:3px 10px;border-radius:4px;
+}
+.cat-crypto{background:rgba(0,212,255,0.1);color:var(--cyan);border:1px solid rgba(0,212,255,0.3);}
+.cat-forensics{background:rgba(255,211,42,0.1);color:var(--yellow);border:1px solid rgba(255,211,42,0.3);}
+.cat-web{background:rgba(255,71,87,0.1);color:var(--red);border:1px solid rgba(255,71,87,0.3);}
+.cat-steganography{background:rgba(0,255,136,0.1);color:var(--green);border:1px solid rgba(0,255,136,0.3);}
+.cat-reverse{background:rgba(200,100,255,0.1);color:#c864ff;border:1px solid rgba(200,100,255,0.3);}
+
+.ctf-body{padding:24px;}
+.ctf-desc{color:var(--muted);font-size:14px;line-height:1.7;margin-bottom:20px;}
+
+/* Terminal-style clue box */
+.ctf-terminal{
+  background:#010409;border:1px solid var(--border);border-radius:6px;
+  font-family:'Share Tech Mono',monospace;font-size:13px;
+  margin-bottom:20px;overflow:hidden;
+}
+.ctf-terminal-bar{
+  background:var(--surface2);border-bottom:1px solid var(--border);
+  padding:8px 14px;display:flex;align-items:center;gap:7px;
+}
+.term-dot{width:10px;height:10px;border-radius:50%;}
+.term-dot.r{background:#ff5f57;}
+.term-dot.y{background:#febc2e;}
+.term-dot.g{background:#28c840;}
+.ctf-terminal-body{padding:16px;color:var(--green);line-height:1.8;white-space:pre-wrap;word-break:break-all;}
+.ctf-terminal-body .prompt{color:var(--cyan);}
+.ctf-terminal-body .comment{color:var(--muted);}
+.ctf-terminal-body .flag-found{color:var(--yellow);}
+
+/* Hint system */
+.hint-btn{
+  background:transparent;border:1px dashed var(--border);
+  color:var(--muted);font-family:'Exo 2',sans-serif;font-size:12px;
+  padding:7px 14px;border-radius:var(--radius);cursor:pointer;transition:.2s;margin-bottom:10px;display:block;width:100%;text-align:left;
+}
+.hint-btn:hover{border-color:var(--yellow);color:var(--yellow);}
+.hint-content{
+  background:rgba(255,211,42,0.05);border:1px solid rgba(255,211,42,0.2);
+  border-radius:var(--radius);padding:12px;font-size:13px;color:var(--text);
+  margin-bottom:10px;line-height:1.6;display:none;
+}
+.hint-content.visible{display:block;animation:fadeUp .3s ease both;}
+
+/* Flag input */
+.ctf-flag-wrap{display:flex;gap:10px;align-items:center;margin-top:20px;}
+.ctf-flag-input{
+  flex:1;background:var(--surface2);border:1px solid var(--border);
+  color:var(--green);font-family:'Share Tech Mono',monospace;font-size:14px;
+  padding:11px 16px;border-radius:var(--radius);outline:none;transition:.2s;
+  letter-spacing:1px;
+}
+.ctf-flag-input:focus{border-color:var(--cyan);}
+.ctf-flag-input::placeholder{color:var(--muted);letter-spacing:0;}
+.ctf-flag-input.correct-flag{border-color:var(--green);background:rgba(0,255,136,0.05);}
+.ctf-flag-input.wrong-flag{border-color:var(--red);background:rgba(255,71,87,0.05);animation:shake .3s ease;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}
+}
+.submit-flag-btn{
+  background:var(--cyan);color:#000;border:none;
+  font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;
+  padding:11px 22px;border-radius:var(--radius);cursor:pointer;transition:.2s;white-space:nowrap;
+}
+.submit-flag-btn:hover{opacity:0.85;}
+.flag-feedback{margin-top:12px;font-size:13px;font-weight:600;padding:10px 14px;border-radius:var(--radius);}
+.flag-feedback.ok{background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.3);color:var(--green);}
+.flag-feedback.err{background:rgba(255,71,87,0.08);border:1px solid rgba(255,71,87,0.3);color:var(--red);}
+
+/* CTF scoreboard */
+.ctf-score-strip{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:12px 20px;margin-bottom:20px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+}
+.ctf-total-pts{font-family:'Share Tech Mono',monospace;font-size:24px;color:var(--cyan);}
+.ctf-solved-count{font-size:13px;color:var(--muted);}
+
+/* Solved overlay */
+.solved-overlay{
+  background:rgba(0,255,136,0.06);border:2px solid rgba(0,255,136,0.4);
+  border-radius:var(--radius);padding:20px;text-align:center;margin-top:16px;
+  animation:fadeUp .4s ease both;
+}
+
+#particles-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.4;}
+main{position:relative;z-index:1;}
+header{position:sticky;top:0;z-index:100;}
+
+</style>
+</head>
+<body>
+<canvas id="particles-canvas"></canvas>
+
+<header>
+  <div>
+    <div class="logo">Hack<span>Learn</span></div>
+    <div class="logo-sub">PLATFORM BELAJAR CYBERSECURITY</div>
+  </div>
+  <nav>
+    <button class="nav-btn active" onclick="showSection('home')">🏠 Beranda</button>
+    <button class="nav-btn" onclick="showSection('materi')">📚 Materi</button>
+    <button class="nav-btn" onclick="showSection('kuis')">🎯 Kuis</button>
+    <button class="nav-btn" onclick="showSection('tantangan')">⚡ Tantangan</button>
+    <button class="nav-btn" onclick="showSection('ctf')">🧩 CTF Lab</button>
+    <button class="nav-btn" onclick="showSection('chat')">🤖 AI Tutor</button>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark/Light Mode" id="theme-btn">☀️</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- HOME -->
+<div id="section-home" class="section active fadeUp">
+  <div class="hero">
+    <div class="hero-tag">▶ PPLG CYBERSECURITY</div>
+    <h1>Belajar <span>Ethical Hacking</span><br>dengan Cara yang Benar</h1>
+    <p>Platform belajar keamanan siber untuk siswa SMK PPLG. Mulai dari dasar hingga teknik pertahanan jaringan.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">4</div><div class="stat-label">MODUL MATERI</div></div>
+      <div class="stat"><div class="stat-num">10</div><div class="stat-label">SOAL KUIS</div></div>
+      <div class="stat"><div class="stat-num">🔥</div><div class="stat-label">DAILY STREAK</div></div>
+      <div class="stat"><div class="stat-num">∞</div><div class="stat-label">TANYA AI TUTOR</div></div>
+    </div>
+  </div>
+
+  <div style="margin-top:8px;">
+    <div class="section-title">Mulai dari <span>mana?</span></div>
+    <div class="section-sub">Pilih menu yang ingin kamu jelajahi</div>
+  </div>
+
+  <div class="cards">
+    <div class="card" onclick="showSection('materi')">
+      <div class="card-icon">📚</div>
+      <div class="card-title">Modul Materi</div>
+      <div class="card-desc">Pelajari konsep dasar cybersecurity, jenis serangan, dan cara pertahanan sistem.</div>
+      <div class="card-badge badge-easy">4 TOPIK</div>
+    </div>
+    <div class="card" onclick="showSection('kuis')">
+      <div class="card-icon">🎯</div>
+      <div class="card-title">Kuis Interaktif</div>
+      <div class="card-desc">Uji pengetahuanmu dengan soal-soal seputar ethical hacking dan keamanan jaringan.</div>
+      <div class="card-badge badge-med">10 SOAL</div>
+    </div>
+    <div class="card" onclick="showSection('chat')">
+      <div class="card-icon">🤖</div>
+      <div class="card-title">AI Tutor</div>
+      <div class="card-desc">Tanya CyberBot tentang apapun seputar cybersecurity. Dijawab secara edukatif dan mudah dipahami.</div>
+      <div class="card-badge badge-easy">UNLIMITED</div>
+    </div>
+    <div class="card" onclick="showSection('tantangan')" style="border-color:rgba(255,211,42,0.3);">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">Daily Challenge</div>
+      <div class="card-desc">Tantangan harian dengan timer! Selesaikan dalam waktu terbatas dan jaga streak-mu.</div>
+      <div class="card-badge" style="background:rgba(255,211,42,0.1);color:var(--yellow);">HARIAN</div>
+    </div>
+    <div class="card" onclick="showSection('ctf')" style="border-color:rgba(0,212,255,0.3);">
+      <div class="card-icon">🧩</div>
+      <div class="card-title">CTF Lab</div>
+      <div class="card-desc">Pecahkan tantangan nyata! Decode pesan, crack hash, temukan flag tersembunyi layaknya hacker sungguhan.</div>
+      <div class="card-badge badge-hard">HACKER MODE</div>
+    </div>
+  </div>
+</div>
+
+<!-- MATERI -->
+<div id="section-materi" class="section fadeUp">
+  <div id="materi-list">
+    <div class="section-title">Modul <span>Materi</span></div>
+    <div class="section-sub">Pilih topik yang ingin dipelajari</div>
+    <div class="cards">
+      <div class="card" onclick="showMateri(0)">
+        <div class="card-icon">🔐</div>
+        <div class="card-title">Dasar Keamanan Siber</div>
+        <div class="card-desc">Konsep CIA Triad, ancaman siber, dan prinsip dasar keamanan informasi.</div>
+        <div class="card-badge badge-easy">PEMULA</div>
+      </div>
+      <div class="card" onclick="showMateri(1)">
+        <div class="card-icon">🌐</div>
+        <div class="card-title">Keamanan Jaringan</div>
+        <div class="card-desc">Firewall, VPN, protokol jaringan, dan cara mengamankan infrastruktur jaringan.</div>
+        <div class="card-badge badge-med">MENENGAH</div>
+      </div>
+      <div class="card" onclick="showMateri(2)">
+        <div class="card-icon">⚔️</div>
+        <div class="card-title">Jenis Serangan Siber</div>
+        <div class="card-desc">Phishing, SQL Injection, XSS, MITM, DDoS — cara kerja dan pencegahannya.</div>
+        <div class="card-badge badge-med">MENENGAH</div>
+      </div>
+      <div class="card" onclick="showMateri(3)">
+        <div class="card-icon">🕵️</div>
+        <div class="card-title">Ethical Hacking</div>
+        <div class="card-desc">Pentest, reconnaissance, vulnerability scanning, dan etika seorang white-hat hacker.</div>
+        <div class="card-badge badge-hard">LANJUTAN</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="materi-detail" style="display:none;">
+    <button class="back-btn" onclick="backToMateri()">← Kembali ke Daftar Materi</button>
+    <div id="materi-content" class="materi-detail fadeUp"></div>
+  </div>
+</div>
+
+<!-- KUIS -->
+<div id="section-kuis" class="section fadeUp">
+  <div class="quiz-wrap">
+    <div id="quiz-start" style="text-align:center;padding:40px 0;">
+      <div class="section-title">Kuis <span>Cybersecurity</span></div>
+      <div class="section-sub" style="margin-bottom:32px;">10 soal pilihan ganda • Cek seberapa jauh pemahamanmu</div>
+      <div class="cards" style="max-width:400px;margin:0 auto 28px;">
+        <div class="card" style="cursor:default;">
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px;">
+            <span>📝 Jumlah Soal</span><span style="color:var(--text);">10 soal</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px;">
+            <span>⏱ Estimasi</span><span style="color:var(--text);">5-10 menit</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);">
+            <span>📚 Topik</span><span style="color:var(--text);">Campuran</span>
+          </div>
+        </div>
+      </div>
+      <button class="next-btn" onclick="startQuiz()" style="font-size:16px;padding:14px 40px;">Mulai Kuis ▶</button>
+    </div>
+    <div id="quiz-area" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- TANTANGAN -->
+<div id="section-tantangan" class="section fadeUp">
+  <div class="challenge-wrap">
+    <div class="section-title">⚡ Daily <span>Challenge</span></div>
+    <div class="section-sub">Tantangan harian — selesaikan secepat mungkin dan jaga streak-mu!</div>
+
+    <div class="streak-bar">
+      <div class="streak-info">
+        <span class="streak-icon">🔥</span>
+        <span>Streak: <strong id="streak-count">0</strong> hari</span>
+      </div>
+      <div class="streak-dots" id="streak-dots"></div>
+    </div>
+
+    <div id="challenge-start-area">
+      <div class="challenge-card-big">
+        <div class="challenge-badge-big">TANTANGAN HARI INI</div>
+        <div id="challenge-preview-title" style="font-size:20px;font-weight:800;margin:12px 0 8px;"></div>
+        <div id="challenge-preview-desc" style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:20px;"></div>
+        <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;">
+          <div class="challenge-meta-item">⏱ <span id="challenge-time-limit">60 detik</span></div>
+          <div class="challenge-meta-item">📝 <span id="challenge-q-count">5 soal</span></div>
+          <div class="challenge-meta-item">⚡ <span id="challenge-xp">+50 XP</span></div>
+        </div>
+        <button class="next-btn pulse-btn" onclick="startChallenge()" style="font-size:16px;padding:14px 40px;">
+          ⚡ Mulai Tantangan
+        </button>
+      </div>
+    </div>
+
+    <div id="challenge-area" style="display:none;"></div>
+    <div id="challenge-result" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- CTF LAB -->
+<div id="section-ctf" class="section fadeUp">
+  <div class="ctf-wrap">
+    <div class="section-title">🧩 CTF <span>Lab</span></div>
+    <div class="section-sub">Capture The Flag — Pecahkan tantangan nyata seperti hacker profesional!</div>
+
+    <div class="ctf-score-strip">
+      <div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:2px;">TOTAL POIN</div>
+        <div class="ctf-total-pts" id="ctf-total-pts">0 pts</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:2px;">TANTANGAN SELESAI</div>
+        <div class="ctf-solved-count" id="ctf-solved-count">0 / 6 solved</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:2px;">RANK</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:16px;color:var(--yellow);" id="ctf-rank">Newbie</div>
+      </div>
+    </div>
+
+    <div class="ctf-grid">
+      <div class="ctf-sidebar" id="ctf-sidebar"><!-- filled by JS --></div>
+      <div class="ctf-main" id="ctf-main"><!-- filled by JS --></div>
+    </div>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div id="section-chat" class="section fadeUp">
+  <div class="chat-wrap">
+    <div class="section-title">AI <span>Tutor</span></div>
+    <div class="section-sub">Tanya apa saja tentang cybersecurity — dijawab oleh AI secara edukatif</div>
+
+    <div class="quick-questions">
+      <span style="font-size:12px;color:var(--muted);padding:5px 0;">Pertanyaan cepat:</span>
+      <button class="quick-q" onclick="quickAsk('Apa itu SQL Injection?')">Apa itu SQL Injection?</button>
+      <button class="quick-q" onclick="quickAsk('Jelaskan apa itu phishing')">Apa itu phishing?</button>
+      <button class="quick-q" onclick="quickAsk('Apa bedanya hacker white hat dan black hat?')">White hat vs Black hat?</button>
+      <button class="quick-q" onclick="quickAsk('Cara kerja VPN itu bagaimana?')">Cara kerja VPN?</button>
+      <button class="quick-q" onclick="quickAsk('Apa itu firewall dan bagaimana cara kerjanya?')">Apa itu Firewall?</button>
+    </div>
+
+    <div class="chat-header">
+      <div class="bot-avatar">🤖</div>
+      <div>
+        <div class="bot-name">CyberBot AI</div>
+        <div class="bot-status"><span class="online-dot"></span>Online — Siap membantu belajar</div>
+      </div>
+    </div>
+    <div class="chat-body" id="chat-body">
+      <div class="msg bot fadeUp">
+        <div class="msg-bubble">
+          Halo! Saya <strong>CyberBot</strong> 👾<br><br>
+          Saya siap membantu kamu belajar <strong>cybersecurity</strong> dan <strong>ethical hacking</strong> secara edukatif. Tanya saja apa yang ingin kamu ketahui — mulai dari konsep dasar sampai teknik keamanan jaringan!<br><br>
+          ⚠️ <em>Catatan: Ilmu ini untuk tujuan <strong>defensif dan edukatif</strong>. Gunakan pengetahuan dengan bertanggung jawab.</em>
+        </div>
+        <div class="msg-time">Sekarang</div>
+      </div>
+    </div>
+    <div class="chat-footer">
+      <input class="chat-input" id="chat-input" placeholder="Tanya seputar cybersecurity..." onkeydown="if(event.key==='Enter')sendMessage()">
+      <button class="send-btn" onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ===== NAV =====
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  const btns = document.querySelectorAll('.nav-btn');
+  const map = {home:0,materi:1,kuis:2,tantangan:3,ctf:4,chat:5};
+  btns[map[id]].classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ===== MATERI DATA =====
+const materiData = [
+  {
+    title: '🔐 Dasar Keamanan Siber',
+    intro: 'Keamanan siber adalah praktik melindungi sistem, jaringan, dan program dari serangan digital. Tiga pilar utama dikenal sebagai CIA Triad.',
+    terms: [
+      {k:'Confidentiality (Kerahasiaan)', v:'Memastikan informasi hanya dapat diakses oleh pihak yang berwenang. Contoh: enkripsi data, password, dan autentikasi dua faktor.'},
+      {k:'Integrity (Integritas)', v:'Menjaga agar data tidak diubah oleh pihak yang tidak berwenang. Contoh: checksum, digital signature, dan hash.'},
+      {k:'Availability (Ketersediaan)', v:'Memastikan sistem dan data selalu tersedia saat dibutuhkan. Contoh: backup rutin, server redundan, dan perlindungan DDoS.'},
+      {k:'Autentikasi', v:'Proses memverifikasi identitas pengguna. Jenis: sesuatu yang kamu tahu (password), kamu miliki (token), atau kamu adalah (biometrik).'},
+      {k:'Enkripsi', v:'Proses mengubah data menjadi format yang tidak dapat dibaca tanpa kunci dekripsi. Contoh: AES, RSA, SSL/TLS.'},
+      {k:'Vulnerability', v:'Kelemahan dalam sistem, aplikasi, atau proses yang dapat dieksploitasi oleh penyerang.'},
+    ]
+  },
+  {
+    title: '🌐 Keamanan Jaringan',
+    intro: 'Keamanan jaringan adalah tindakan untuk melindungi infrastruktur jaringan komputer dari akses tidak sah, penyalahgunaan, atau gangguan.',
+    terms: [
+      {k:'Firewall', v:'Sistem keamanan yang memantau dan mengontrol lalu lintas jaringan berdasarkan aturan yang ditentukan. Bisa berbasis perangkat keras atau perangkat lunak.'},
+      {k:'VPN (Virtual Private Network)', v:'Membuat koneksi terenkripsi melalui jaringan publik sehingga data aman dari penyadapan. Bekerja dengan membuat "terowongan" privat.'},
+      {k:'IDS/IPS', v:'Intrusion Detection System mendeteksi serangan, sedangkan Intrusion Prevention System juga memblokirnya secara otomatis.'},
+      {k:'DMZ (Demilitarized Zone)', v:'Segmen jaringan terpisah yang menjadi buffer antara jaringan internal (aman) dan internet publik (tidak aman).'},
+      {k:'Port Scanning', v:'Teknik untuk menemukan port yang terbuka pada host. Digunakan dalam keamanan defensif untuk audit, atau ofensif untuk mencari celah.'},
+      {k:'SSL/TLS', v:'Protokol kriptografi yang mengamankan komunikasi melalui internet. HTTPS menggunakan TLS untuk mengenkripsi data antara browser dan server.'},
+    ]
+  },
+  {
+    title: '⚔️ Jenis Serangan Siber',
+    intro: 'Memahami jenis-jenis serangan adalah langkah pertama dalam membangun pertahanan yang efektif. Berikut serangan siber yang paling umum.',
+    terms: [
+      {k:'Phishing', v:'Serangan rekayasa sosial di mana penyerang meniru entitas terpercaya untuk mencuri kredensial atau informasi sensitif melalui email/pesan palsu.'},
+      {k:'SQL Injection', v:'Menyisipkan kode SQL berbahaya ke dalam input aplikasi web untuk memanipulasi database. Dapat menyebabkan kebocoran atau penghapusan data.'},
+      {k:'XSS (Cross-Site Scripting)', v:'Menyisipkan skrip berbahaya ke halaman web yang akan dijalankan di browser pengguna lain. Bisa mencuri cookie atau sesi login.'},
+      {k:'MITM (Man-in-the-Middle)', v:'Penyerang menyisipkan diri di antara dua pihak yang berkomunikasi untuk menyadap atau memodifikasi data yang dikirimkan.'},
+      {k:'DDoS (Distributed Denial of Service)', v:'Membanjiri server dengan traffic dari banyak sumber sekaligus sehingga server tidak bisa melayani pengguna yang sah.'},
+      {k:'Ransomware', v:'Malware yang mengenkripsi file korban dan meminta tebusan untuk mendapatkan kunci dekripsi. Contoh terkenal: WannaCry.'},
+    ]
+  },
+  {
+    title: '🕵️ Ethical Hacking',
+    intro: 'Ethical hacking (white-hat hacking) adalah praktik menguji sistem secara legal dan resmi untuk menemukan kerentanan sebelum penyerang jahat melakukannya.',
+    terms: [
+      {k:'Penetration Testing (Pentest)', v:'Simulasi serangan siber yang dilakukan secara resmi untuk mengevaluasi keamanan sistem. Hasilnya berupa laporan kerentanan dan rekomendasi.'},
+      {k:'Reconnaissance', v:'Tahap pertama pentest — mengumpulkan informasi tentang target. Dibagi dua: passive (tanpa kontak langsung) dan active (interaksi langsung dengan target).'},
+      {k:'Vulnerability Scanning', v:'Menggunakan tools otomatis (Nessus, OpenVAS) untuk menemukan kerentanan yang diketahui dalam sistem atau jaringan.'},
+      {k:'Exploit', v:'Kode atau teknik yang memanfaatkan kerentanan untuk mendapatkan akses. Dalam pentest, digunakan untuk membuktikan bahwa kerentanan nyata dan berdampak.'},
+      {k:'Kali Linux', v:'Distribusi Linux yang dirancang khusus untuk pengujian keamanan. Dilengkapi ratusan tools keamanan seperti Nmap, Metasploit, Wireshark, dll.'},
+      {k:'Responsible Disclosure', v:'Etika melaporkan kerentanan yang ditemukan kepada pemilik sistem sebelum dipublikasikan, memberi waktu untuk perbaikan.'},
+    ]
+  }
+];
+
+function showMateri(idx) {
+  const m = materiData[idx];
+  document.getElementById('materi-list').style.display = 'none';
+  document.getElementById('materi-detail').style.display = 'block';
+  document.getElementById('materi-content').innerHTML = `
+    <h2>${m.title}</h2>
+    <p>${m.intro}</p>
+    ${m.terms.map(t => `
+      <div class="term">
+        <strong>${t.k}</strong>
+        <p>${t.v}</p>
+      </div>
+    `).join('')}
+  `;
+  window.scrollTo(0,0);
+}
+
+function backToMateri() {
+  document.getElementById('materi-list').style.display = 'block';
+  document.getElementById('materi-detail').style.display = 'none';
+}
+
+// ===== KUIS DATA =====
+const questions = [
+  {q:'Apa kepanjangan dari CIA dalam CIA Triad keamanan siber?',opts:['Central Intelligence Agency','Confidentiality, Integrity, Availability','Computer Information Access','Cyber Incident Analysis'],ans:1,exp:'CIA Triad adalah tiga pilar utama keamanan informasi: Confidentiality (kerahasiaan), Integrity (integritas), dan Availability (ketersediaan).'},
+  {q:'Serangan yang menyisipkan kode SQL berbahaya ke input form disebut...',opts:['XSS Attack','Phishing','SQL Injection','DDoS Attack'],ans:2,exp:'SQL Injection menyisipkan perintah SQL ke input aplikasi untuk memanipulasi database, bisa menyebabkan kebocoran atau penghapusan data.'},
+  {q:'Apa fungsi utama sebuah Firewall?',opts:['Mempercepat koneksi internet','Mengenkripsi file di komputer','Memantau dan menyaring lalu lintas jaringan','Menyimpan cadangan data'],ans:2,exp:'Firewall memantau dan mengontrol lalu lintas jaringan masuk/keluar berdasarkan aturan keamanan yang telah ditentukan.'},
+  {q:'Phishing adalah serangan yang memanfaatkan...',opts:['Kelemahan kode program','Rekayasa sosial untuk mengelabui korban','Kelemahan jaringan Wi-Fi','Virus yang menyebar lewat USB'],ans:1,exp:'Phishing menggunakan rekayasa sosial — penyerang berpura-pura menjadi entitas terpercaya untuk mencuri informasi sensitif korban.'},
+  {q:'Hacker yang bekerja secara legal untuk menguji keamanan sistem disebut...',opts:['Black Hat Hacker','Grey Hat Hacker','White Hat Hacker','Script Kiddie'],ans:2,exp:'White Hat Hacker (ethical hacker) melakukan pengujian keamanan secara legal dan resmi dengan izin dari pemilik sistem.'},
+  {q:'VPN (Virtual Private Network) berfungsi untuk...',opts:['Memblokir iklan di browser','Membuat koneksi terenkripsi melalui jaringan publik','Meningkatkan kecepatan download','Menyimpan password secara aman'],ans:1,exp:'VPN membuat "terowongan" terenkripsi antara perangkat dan server VPN, melindungi data dari penyadapan di jaringan publik.'},
+  {q:'Serangan DDoS bertujuan untuk...',opts:['Mencuri data pengguna','Menyebarkan virus ke banyak komputer','Membuat server tidak bisa diakses dengan membanjirinya','Mengubah tampilan website'],ans:2,exp:'DDoS (Distributed Denial of Service) membanjiri server dengan traffic dari banyak sumber sehingga server kehabisan sumber daya dan tidak bisa melayani pengguna.'},
+  {q:'Apa yang dimaksud dengan Ransomware?',opts:['Software untuk recovery data','Malware yang mengenkripsi file dan meminta tebusan','Virus yang merusak hardware','Aplikasi untuk memantau jaringan'],ans:1,exp:'Ransomware mengenkripsi file korban sehingga tidak bisa diakses, lalu meminta pembayaran tebusan untuk kunci dekripsi.'},
+  {q:'Tahap pertama dalam proses penetration testing disebut...',opts:['Exploitation','Reconnaissance','Post-exploitation','Reporting'],ans:1,exp:'Reconnaissance (pengintaian) adalah tahap pertama pentest — mengumpulkan informasi sebanyak mungkin tentang target sebelum melakukan serangan.'},
+  {q:'SSL/TLS digunakan pada HTTPS untuk...',opts:['Mempercepat loading halaman web','Mengompres ukuran file website','Mengenkripsi komunikasi antara browser dan server','Memblokir konten berbahaya'],ans:2,exp:'SSL/TLS adalah protokol kriptografi yang mengenkripsi data antara browser dan server web, memastikan data tidak bisa disadap dalam perjalanan.'},
+];
+
+let currentQ = 0, score = 0, answered = false;
+
+function startQuiz() {
+  currentQ = 0; score = 0;
+  document.getElementById('quiz-start').style.display = 'none';
+  document.getElementById('quiz-area').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = questions[currentQ];
+  const pct = (currentQ / questions.length) * 100;
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="quiz-header">
+      <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--muted);">${currentQ+1}/${questions.length}</span>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--green);">${score} ✓</span>
+    </div>
+    <div class="quiz-q fadeUp">
+      <div class="q-num">SOAL ${currentQ+1}</div>
+      <p>${q.q}</p>
+    </div>
+    <div class="options">
+      ${q.opts.map((o,i) => `<button class="option-btn" onclick="selectAnswer(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+    </div>
+    <div id="feedback"></div>
+    <div id="next-wrap"></div>
+  `;
+}
+
+function selectAnswer(idx) {
+  if(answered) return;
+  answered = true;
+  const q = questions[currentQ];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+  btns[q.ans].classList.add('correct');
+  if(idx !== q.ans) btns[idx].classList.add('wrong');
+  else score++;
+  document.getElementById('feedback').innerHTML = `
+    <div class="feedback ${idx===q.ans?'correct':'wrong'}">
+      ${idx===q.ans ? '✅ Benar!' : '❌ Salah!'} — ${q.exp}
+    </div>`;
+  document.getElementById('next-wrap').innerHTML = `
+    <button class="next-btn" onclick="nextQuestion()">${currentQ+1<questions.length?'Soal Berikutnya →':'Lihat Hasil'}</button>`;
+}
+
+function nextQuestion() {
+  currentQ++;
+  if(currentQ < questions.length) renderQuestion();
+  else showScore();
+}
+
+function showScore() {
+  const pct = Math.round((score/questions.length)*100);
+  let msg = pct>=80 ? '🎉 Luar biasa! Kamu sudah paham dasar cybersecurity dengan baik.' :
+            pct>=60 ? '👍 Bagus! Masih ada beberapa konsep yang perlu diperdalam.' :
+            '📚 Terus belajar! Coba baca materi lagi lalu ulangi kuis ini.';
+  document.getElementById('quiz-area').innerHTML = `
+    <div class="score-card fadeUp">
+      <div style="font-size:48px;margin-bottom:16px;">🏆</div>
+      <div class="score-num">${score}/${questions.length}</div>
+      <div class="score-label">SOAL BENAR</div>
+      <div class="score-msg">${pct}% — ${pct>=80?'Excellent!':pct>=60?'Good Job!':'Keep Learning!'}</div>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:28px;">${msg}</p>
+      <div style="display:flex;gap:12px;justify-content:center;">
+        <button class="next-btn" onclick="startQuiz()">Ulangi Kuis ↺</button>
+        <button class="next-btn" onclick="showSection('materi')" style="background:var(--surface2);color:var(--text);border:1px solid var(--border);">Baca Materi 📚</button>
+      </div>
+    </div>`;
+}
+
+// ===== CHATBOT =====
+function getTime() {
+  return new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+}
+
+function appendMsg(text, role) {
+  const body = document.getElementById('chat-body');
+  const div = document.createElement('div');
+  div.className = `msg ${role} fadeUp`;
+  div.innerHTML = `<div class="msg-bubble">${text}</div><div class="msg-time">${getTime()}</div>`;
+  body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
+}
+
+function appendTyping() {
+  const body = document.getElementById('chat-body');
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.id = 'typing';
+  div.innerHTML = `<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+  body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing');
+  if(t) t.remove();
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = '';
+  appendMsg(text, 'user');
+  appendTyping();
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `Kamu adalah CyberBot, tutor AI untuk belajar cybersecurity dan ethical hacking secara edukatif untuk siswa SMK jurusan PPLG di Indonesia. 
+Jawab dalam Bahasa Indonesia yang mudah dipahami siswa SMK.
+Fokus pada aspek DEFENSIF dan EDUKATIF. 
+Jangan berikan panduan teknis detail untuk melakukan serangan nyata atau ilegal.
+Gunakan contoh, analogi, dan penjelasan yang mudah dipahami.
+Format jawaban dengan rapi menggunakan baris baru dan poin-poin jika perlu.
+Tambahkan emoji yang relevan untuk membuat jawaban lebih menarik.`,
+        messages: [{role:'user', content: text}]
+      })
+    });
+    const data = await res.json();
+    removeTyping();
+    const reply = data.content.map(c => c.text || '').join('').replace(/\n/g,'<br>');
+    appendMsg(reply, 'bot');
+  } catch(e) {
+    removeTyping();
+    appendMsg('⚠️ Maaf, terjadi kesalahan koneksi. Coba lagi ya!', 'bot');
+  }
+}
+
+function quickAsk(q) {
+  document.getElementById('chat-input').value = q;
+  sendMessage();
+}
+
+// ===== THEME TOGGLE =====
+let isLight = false;
+function toggleTheme() {
+  isLight = !isLight;
+  document.body.classList.toggle('light', isLight);
+  document.getElementById('theme-btn').textContent = isLight ? '🌙' : '☀️';
+  localStorage.setItem('hacklearn-theme', isLight ? 'light' : 'dark');
+  // update particles color
+  initParticles();
+}
+// restore theme
+if(localStorage.getItem('hacklearn-theme') === 'light') toggleTheme();
+
+// ===== PARTICLES =====
+function initParticles() {
+  const canvas = document.getElementById('particles-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const color = isLight ? '0,150,80' : '0,255,136';
+  const particles = Array.from({length: 40}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.5 + 0.5,
+    dx: (Math.random() - 0.5) * 0.4,
+    dy: (Math.random() - 0.5) * 0.4,
+    opacity: Math.random() * 0.5 + 0.1
+  }));
+  let animId;
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(${color},${p.opacity})`;
+      ctx.fill();
+      p.x += p.dx; p.y += p.dy;
+      if(p.x < 0 || p.x > canvas.width) p.dx *= -1;
+      if(p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    });
+    // draw connections
+    for(let i=0;i<particles.length;i++) {
+      for(let j=i+1;j<particles.length;j++) {
+        const dist = Math.hypot(particles[i].x-particles[j].x, particles[i].y-particles[j].y);
+        if(dist < 120) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(${color},${0.08*(1-dist/120)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    animId = requestAnimationFrame(draw);
+  }
+  if(window._particleAnimId) cancelAnimationFrame(window._particleAnimId);
+  draw();
+  window._particleAnimId = animId;
+}
+initParticles();
+window.addEventListener('resize', () => {
+  const canvas = document.getElementById('particles-canvas');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
+// ===== DAILY CHALLENGE =====
+const challengeSets = [
+  {
+    title: 'Operasi Firewall',
+    desc: 'Uji pemahamanmu tentang keamanan jaringan dan sistem pertahanan siber. 5 soal, 60 detik!',
+    timeLimit: 60,
+    xp: 50,
+    questions: [
+      {q:'Firewall beroperasi di layer mana pada model OSI?',opts:['Layer 1 - Physical','Layer 3/4 - Network/Transport','Layer 7 - Application','Layer 2 - Data Link'],ans:1,exp:'Firewall tradisional beroperasi di Layer 3 (Network) dan Layer 4 (Transport), menyaring berdasarkan IP dan port.'},
+      {q:'Apa itu stateful firewall?',opts:['Firewall yang menyimpan state koneksi untuk keputusan lebih cerdas','Firewall yang hanya memblokir IP tertentu','Firewall berbasis perangkat keras saja','Firewall yang bekerja di Layer 7'],ans:0,exp:'Stateful firewall melacak state koneksi aktif sehingga bisa membuat keputusan lebih cerdas dari sekedar aturan statis.'},
+      {q:'Port berapa yang biasa digunakan HTTPS?',opts:['80','21','443','8080'],ans:2,exp:'HTTPS menggunakan port 443 secara default. Port 80 untuk HTTP biasa.'},
+      {q:'DMZ dalam konteks jaringan adalah...',opts:['Zona berbahaya tanpa proteksi apapun','Buffer zone antara jaringan internal dan internet','Jenis serangan DDoS','Protokol enkripsi jaringan'],ans:1,exp:'DMZ (Demilitarized Zone) adalah segmen jaringan terpisah sebagai buffer antara jaringan internal aman dan internet publik.'},
+      {q:'IDS berbeda dengan IPS karena IDS hanya...',opts:['Memblokir serangan','Mendeteksi dan melaporkan serangan tanpa memblokir','Mengenkripsi traffic jaringan','Menyaring paket berdasarkan IP'],ans:1,exp:'IDS (Intrusion Detection System) mendeteksi dan melaporkan ancaman, sedangkan IPS (Intrusion Prevention System) juga secara aktif memblokir.'},
+    ]
+  },
+  {
+    title: 'Serangan & Pertahanan',
+    desc: 'Seberapa baik kamu mengenal jenis-jenis serangan siber? Buktikan dalam 60 detik!',
+    timeLimit: 60,
+    xp: 60,
+    questions: [
+      {q:'Serangan yang memanfaatkan kepercayaan user dengan email palsu disebut?',opts:['Brute Force','Phishing','SQL Injection','Ransomware'],ans:1,exp:'Phishing menggunakan rekayasa sosial melalui email atau pesan palsu yang meniru entitas terpercaya.'},
+      {q:'Apa kepanjangan XSS?',opts:['Extra Secure Shell','Cross-Site Scripting','Cross-Server System','External Script Source'],ans:1,exp:'XSS (Cross-Site Scripting) menyisipkan skrip berbahaya ke halaman web yang dijalankan di browser pengguna lain.'},
+      {q:'WannaCry adalah contoh dari jenis malware...',opts:['Spyware','Adware','Ransomware','Rootkit'],ans:2,exp:'WannaCry (2017) adalah ransomware yang mengenkripsi file dan meminta tebusan Bitcoin, menyerang ratusan ribu komputer global.'},
+      {q:'Apa yang dimaksud Zero-Day Vulnerability?',opts:['Kerentanan yang sudah ada patch-nya','Kerentanan yang baru ditemukan dan belum ada patch','Serangan di tengah malam','Virus yang menginfeksi pada hari pertama'],ans:1,exp:'Zero-Day adalah kerentanan yang belum diketahui vendor sehingga belum ada patch — sangat berbahaya karena tidak ada pertahanan siap.'},
+      {q:'Social engineering menyerang...',opts:['Firewall dan software','Kelemahan manusia dan psikologi','Hardware komputer','Protokol jaringan'],ans:1,exp:'Social engineering mengeksploitasi kelemahan manusia — kepercayaan, rasa takut, atau ketidaktahuan — bukan kelemahan teknis sistem.'},
+    ]
+  },
+  {
+    title: 'Crypto & Enkripsi',
+    desc: 'Tantangan tentang kriptografi dan keamanan data. Siap dalam 75 detik?',
+    timeLimit: 75,
+    xp: 70,
+    questions: [
+      {q:'Algoritma enkripsi mana yang termasuk enkripsi simetris?',opts:['RSA','AES','ECC','Diffie-Hellman'],ans:1,exp:'AES (Advanced Encryption Standard) adalah enkripsi simetris — menggunakan kunci yang sama untuk enkripsi dan dekripsi.'},
+      {q:'HTTPS menggunakan protokol apa untuk enkripsi?',opts:['FTP','SSH','TLS/SSL','IPSec'],ans:2,exp:'HTTPS menggunakan TLS (Transport Layer Security), penerus SSL, untuk mengenkripsi komunikasi antara browser dan server.'},
+      {q:'Hash berbeda dengan enkripsi karena hash...',opts:['Lebih lambat','Bisa di-reverse','Tidak bisa di-reverse (one-way)','Membutuhkan kunci'],ans:2,exp:'Hash adalah fungsi satu arah — kamu tidak bisa mendapatkan data asli dari hash-nya. Digunakan untuk verifikasi integritas data.'},
+      {q:'Apa fungsi Digital Signature?',opts:['Mengenkripsi data agar rahasia','Memverifikasi keaslian dan integritas data','Mempercepat transmisi data','Memblokir akses tidak sah'],ans:1,exp:'Digital Signature membuktikan bahwa data berasal dari pengirim yang diklaim dan tidak dimodifikasi — memverifikasi keaslian dan integritas.'},
+      {q:'2FA (Two-Factor Authentication) menambahkan lapisan keamanan dengan...',opts:['Dua password berbeda','Kombinasi sesuatu yang kamu tahu + miliki/adalah','Enkripsi ganda pada password','Login dari dua perangkat'],ans:1,exp:'2FA menggabungkan dua faktor: sesuatu yang kamu tahu (password) dengan sesuatu yang kamu miliki (OTP token) atau kamu adalah (biometrik).'},
+    ]
+  }
+];
+
+// Pilih challenge berdasarkan hari agar "daily"
+const todayIdx = new Date().getDate() % challengeSets.length;
+const todayChallenge = challengeSets[todayIdx];
+
+let challengeTimer = null;
+let challengeTimeLeft = 0;
+let challengeCurrent = 0;
+let challengeScore = 0;
+let challengeAnswered = false;
+let challengeStreak = parseInt(localStorage.getItem('hacklearn-streak') || '0');
+let lastPlayed = localStorage.getItem('hacklearn-last');
+const todayStr = new Date().toDateString();
+
+function initChallengeUI() {
+  document.getElementById('challenge-preview-title').textContent = todayChallenge.title;
+  document.getElementById('challenge-preview-desc').textContent = todayChallenge.desc;
+  document.getElementById('challenge-time-limit').textContent = todayChallenge.timeLimit + ' detik';
+  document.getElementById('challenge-q-count').textContent = todayChallenge.questions.length + ' soal';
+  document.getElementById('challenge-xp').textContent = '+' + todayChallenge.xp + ' XP';
+  document.getElementById('streak-count').textContent = challengeStreak;
+  renderStreakDots();
+
+  // Cek apakah sudah main hari ini
+  if(lastPlayed === todayStr) {
+    document.querySelector('.pulse-btn').textContent = '✅ Sudah Selesai Hari Ini';
+    document.querySelector('.pulse-btn').style.background = 'var(--surface2)';
+    document.querySelector('.pulse-btn').style.color = 'var(--muted)';
+    document.querySelector('.pulse-btn').style.border = '1px solid var(--border)';
+    document.querySelector('.pulse-btn').style.animation = 'none';
+    document.querySelector('.pulse-btn').onclick = null;
+    document.querySelector('.pulse-btn').style.cursor = 'default';
+  }
+}
+
+function renderStreakDots() {
+  const dots = document.getElementById('streak-dots');
+  dots.innerHTML = '';
+  for(let i=0;i<7;i++){
+    const d = document.createElement('div');
+    d.className = 'streak-dot' + (i < Math.min(challengeStreak,7) ? ' active' : '');
+    dots.appendChild(d);
+  }
+}
+
+function startChallenge() {
+  if(lastPlayed === todayStr) return;
+  challengeCurrent = 0;
+  challengeScore = 0;
+  document.getElementById('challenge-start-area').style.display = 'none';
+  document.getElementById('challenge-area').style.display = 'block';
+  renderChallengeQuestion();
+}
+
+function renderChallengeQuestion() {
+  challengeAnswered = false;
+  const q = todayChallenge.questions[challengeCurrent];
+  const pct = (challengeCurrent / todayChallenge.questions.length) * 100;
+  challengeTimeLeft = todayChallenge.timeLimit;
+
+  document.getElementById('challenge-area').innerHTML = `
+    <div class="challenge-timer-wrap">
+      <div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--muted);">${challengeCurrent+1}/${todayChallenge.questions.length}</div>
+        <div class="progress-bar" style="width:200px;margin:8px 0 0;"><div class="progress-fill" style="width:${pct}%"></div></div>
+      </div>
+      <div id="timer-circle" class="timer-circle">
+        <div class="timer-inner" id="timer-num">${challengeTimeLeft}</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:12px;color:var(--muted);">Skor</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:20px;color:var(--yellow);">${challengeScore}/${todayChallenge.questions.length}</div>
+      </div>
+    </div>
+    <div class="quiz-q fadeUp">
+      <div class="q-num" style="color:var(--yellow);">⚡ TANTANGAN ${challengeCurrent+1}</div>
+      <p>${q.q}</p>
+    </div>
+    <div class="options">
+      ${q.opts.map((o,i) => `<button class="option-btn" onclick="selectChallengeAnswer(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+    </div>
+    <div id="challenge-feedback"></div>
+    <div id="challenge-next-wrap"></div>
+  `;
+  startTimer();
+}
+
+function startTimer() {
+  clearInterval(challengeTimer);
+  updateTimerDisplay();
+  challengeTimer = setInterval(() => {
+    challengeTimeLeft--;
+    updateTimerDisplay();
+    if(challengeTimeLeft <= 0) {
+      clearInterval(challengeTimer);
+      if(!challengeAnswered) timeOut();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const circle = document.getElementById('timer-circle');
+  const num = document.getElementById('timer-num');
+  if(!circle || !num) return;
+  num.textContent = challengeTimeLeft;
+  const pct = (challengeTimeLeft / todayChallenge.timeLimit) * 100;
+  let color = 'var(--green)';
+  circle.classList.remove('warning','danger');
+  if(challengeTimeLeft <= 10) { color='var(--red)'; circle.classList.add('danger'); }
+  else if(challengeTimeLeft <= 20) { color='var(--yellow)'; circle.classList.add('warning'); }
+  circle.style.background = `conic-gradient(${color} ${pct}%, var(--surface2) ${pct}%)`;
+}
+
+function timeOut() {
+  challengeAnswered = true;
+  const q = todayChallenge.questions[challengeCurrent];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+  btns[q.ans].classList.add('correct');
+  document.getElementById('challenge-feedback').innerHTML = `
+    <div class="feedback wrong">⏰ Waktu habis! Jawaban: ${q.opts[q.ans]}<br><small>${q.exp}</small></div>`;
+  document.getElementById('challenge-next-wrap').innerHTML = `
+    <button class="next-btn" onclick="nextChallengeQuestion()">${challengeCurrent+1<todayChallenge.questions.length?'Lanjut →':'Lihat Hasil'}</button>`;
+}
+
+function selectChallengeAnswer(idx) {
+  if(challengeAnswered) return;
+  clearInterval(challengeTimer);
+  challengeAnswered = true;
+  const q = todayChallenge.questions[challengeCurrent];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+  btns[q.ans].classList.add('correct');
+  if(idx !== q.ans) btns[idx].classList.add('wrong');
+  else challengeScore++;
+  document.getElementById('challenge-feedback').innerHTML = `
+    <div class="feedback ${idx===q.ans?'correct':'wrong'}">
+      ${idx===q.ans?'✅ Benar! +10 poin':'❌ Salah!'} — ${q.exp}
+    </div>`;
+  document.getElementById('challenge-next-wrap').innerHTML = `
+    <button class="next-btn" onclick="nextChallengeQuestion()">${challengeCurrent+1<todayChallenge.questions.length?'Soal Berikutnya →':'Lihat Hasil'}</button>`;
+}
+
+function nextChallengeQuestion() {
+  challengeCurrent++;
+  if(challengeCurrent < todayChallenge.questions.length) renderChallengeQuestion();
+  else showChallengeResult();
+}
+
+function showChallengeResult() {
+  clearInterval(challengeTimer);
+  document.getElementById('challenge-area').style.display = 'none';
+  document.getElementById('challenge-result').style.display = 'block';
+
+  // Update streak
+  const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+  if(lastPlayed === yesterday.toDateString()) challengeStreak++;
+  else if(lastPlayed !== todayStr) challengeStreak = 1;
+  localStorage.setItem('hacklearn-streak', challengeStreak);
+  localStorage.setItem('hacklearn-last', todayStr);
+
+  const pct = Math.round((challengeScore/todayChallenge.questions.length)*100);
+  const xpEarned = Math.round(todayChallenge.xp * (pct/100));
+  const stars = pct>=80?'⭐⭐⭐':pct>=60?'⭐⭐':'⭐';
+  const msg = pct>=80?'Luar biasa! Kamu master cybersecurity!':pct>=60?'Bagus! Terus tingkatkan kemampuanmu.':'Jangan menyerah, coba lagi besok!';
+
+  document.getElementById('challenge-result').innerHTML = `
+    <div class="result-card fadeUp">
+      <div class="result-stars">${stars}</div>
+      <div style="font-size:24px;font-weight:800;margin-bottom:4px;">${todayChallenge.title}</div>
+      <div style="color:var(--muted);font-size:14px;margin-bottom:20px;">Tantangan Selesai!</div>
+      <div class="xp-badge">+${xpEarned} XP</div>
+      <div style="font-size:32px;font-family:'Share Tech Mono',monospace;color:var(--green);margin:12px 0 4px;">${challengeScore}/${todayChallenge.questions.length}</div>
+      <div style="color:var(--muted);margin-bottom:8px;">${pct}% benar</div>
+      <div style="background:rgba(255,211,42,0.08);border:1px solid rgba(255,211,42,0.2);border-radius:8px;padding:12px;margin:16px 0;">
+        🔥 Streak kamu: <strong style="color:var(--yellow);">${challengeStreak} hari</strong>
+      </div>
+      <p style="color:var(--muted);font-size:14px;margin-bottom:24px;">${msg}</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button class="next-btn" onclick="showSection('materi')">Baca Materi 📚</button>
+        <button class="next-btn" onclick="showSection('kuis')" style="background:var(--surface2);color:var(--text);border:1px solid var(--border);">Kuis Normal 🎯</button>
+      </div>
+    </div>`;
+  document.getElementById('streak-count').textContent = challengeStreak;
+  renderStreakDots();
+}
+
+// Init challenge UI on load
+initChallengeUI();
+
+// ===== CTF LAB =====
+const ctfChallenges = [
+  {
+    id: 'c1',
+    title: 'Pesan Rahasia Caesar',
+    category: 'CRYPTO',
+    catClass: 'cat-crypto',
+    points: 50,
+    difficulty: 'easy',
+    desc: 'Agen lapangan mengirimkan pesan terenkripsi menggunakan Caesar Cipher. Tugasmu adalah mendekode pesan tersebut dan temukan flag-nya!\n\nCaesar Cipher menggeser setiap huruf sejauh N posisi dalam alfabet. Pesan berikut menggunakan shift tertentu — cari tahu berapa shift-nya!',
+    terminal: `<span class="prompt">$ cat intercepted_message.txt</span>
+KDVBOHDUQBFWI{FDHVDU_FLSKHU_VROYHG}
+
+<span class="comment"># Hint: Flag format adalah HackLearnCTF{...}</span>
+<span class="comment"># Coba semua kemungkinan shift (ROT) dari 1-25</span>
+<span class="prompt">$ </span>`,
+    hints: [
+      '💡 Caesar Cipher ROT-N menggeser huruf N posisi ke depan dalam alfabet.',
+      '💡 Coba ROT-3 — Caesar sendiri menggunakan shift 3. Geser setiap huruf mundur 3 posisi.',
+      '💡 H → E, K → H, D → A... flag dimulai dengan "Hac"'
+    ],
+    flag: 'HackLearnCTF{CAESAR_CIPHER_SOLVED}'
+  },
+  {
+    id: 'c2',
+    title: 'Encode Tersembunyi',
+    category: 'CRYPTO',
+    catClass: 'cat-crypto',
+    points: 75,
+    difficulty: 'easy',
+    desc: 'Seorang insider meninggalkan pesan yang dienkode dengan Base64. Base64 adalah metode encoding populer yang sering digunakan untuk menyembunyikan data. Decode pesan ini untuk menemukan flag!',
+    terminal: `<span class="prompt">$ cat secret_note.b64</span>
+SGFja0xlYXJuQ1RGe0JBU0U2NF9ERUNPREVfTUFTVEVSfQ==
+
+<span class="comment"># Gunakan decoder Base64 untuk membaca pesan ini</span>
+<span class="comment"># Base64 menggunakan karakter A-Z, a-z, 0-9, +, / dan padding =</span>
+<span class="prompt">$ echo "SGFja0xlYXJuQ1RGe0JBU0U2NF9ERUNPREVfTUFTVEVSfQ==" | base64 -d</span>
+<span class="flag-found">[output tersembunyi — decode sendiri!]</span>`,
+    hints: [
+      '💡 Base64 adalah encoding (bukan enkripsi) — siapapun bisa mendecode tanpa kunci.',
+      '💡 Gunakan tool online: base64decode.org atau di terminal: echo "..." | base64 -d',
+      '💡 String Base64 selalu diakhiri dengan = atau == sebagai padding.'
+    ],
+    flag: 'HackLearnCTF{BASE64_DECODE_MASTER}'
+  },
+  {
+    id: 'c3',
+    title: 'Hash Detective',
+    category: 'CRYPTO',
+    catClass: 'cat-crypto',
+    points: 100,
+    difficulty: 'medium',
+    desc: 'Database password telah bocor! Kamu menemukan hash MD5 dari sebuah password sederhana. Tugasmu adalah mengidentifikasi password aslinya melalui teknik hash cracking sederhana.\n\nIngat: MD5 adalah fungsi hash satu arah, tapi password pendek bisa di-crack dengan dictionary attack!',
+    terminal: `<span class="prompt">$ cat leaked_hash.txt</span>
+MD5: 5f4dcc3b5aa765d61d8327deb882cf99
+
+<span class="comment"># Ini adalah hash MD5 dari password yang sangat umum</span>
+<span class="comment"># Cek di: crackstation.net atau hashes.com</span>
+<span class="comment"># Password yang sering dipakai orang: password, 123456, admin...</span>
+<span class="prompt">$ </span>
+<span class="comment"># Setelah tahu password-nya, flag = HackLearnCTF{password_asli}</span>`,
+    hints: [
+      '💡 MD5 hash yang sama selalu menghasilkan output yang sama — database rainbow table bisa mencocokkannya.',
+      '💡 Hash ini adalah salah satu password paling umum di dunia. Coba "password".',
+      '💡 Flag-nya: HackLearnCTF{password} — ganti "password" dengan hasil crack-nya (huruf kecil).'
+    ],
+    flag: 'HackLearnCTF{password}'
+  },
+  {
+    id: 'c4',
+    title: 'Pesan Biner',
+    category: 'FORENSICS',
+    catClass: 'cat-forensics',
+    points: 100,
+    difficulty: 'medium',
+    desc: 'Seorang hacker meninggalkan pesan dalam format biner murni. Komputer hanya mengenal 0 dan 1 — tugasmu adalah mengkonversi pesan biner ini menjadi teks yang bisa dibaca!',
+    terminal: `<span class="prompt">$ cat binary_message.bin</span>
+01001000 01100001 01100011 01101011 01001100
+01100101 01100001 01110010 01101110 01000011
+01010100 01000110 01111011 01000010 01001001
+01001110 01000001 01010010 01011001 01111101
+
+<span class="comment"># Setiap kelompok 8 bit = 1 karakter ASCII</span>
+<span class="comment"># 01001000 = 72 desimal = 'H' dalam ASCII</span>
+<span class="comment"># Gunakan: rapidtables.com/convert/number/binary-to-ascii.html</span>`,
+    hints: [
+      '💡 Binary to ASCII: setiap byte (8 bit) mewakili satu karakter. Konversi biner → desimal → karakter ASCII.',
+      '💡 Karakter pertama 01001000 = 72 = "H". Karakter kedua 01100001 = 97 = "a".',
+      '💡 Gunakan tool online untuk mengkonversi semua sekaligus. Flag dimulai dengan "HackLearnCTF{".'
+    ],
+    flag: 'HackLearnCTF{BINARY}'
+  },
+  {
+    id: 'c5',
+    title: 'SQL Injection Hunt',
+    category: 'WEB',
+    catClass: 'cat-web',
+    points: 150,
+    difficulty: 'hard',
+    desc: 'Kamu menemukan sebuah login form yang rentan terhadap SQL Injection. Tanpa mengetahui username atau password yang valid, dapatkah kamu bypass autentikasi menggunakan SQL Injection?\n\nIni adalah simulasi edukasi — memahami serangan ini membantu kita mempertahankan sistem dari ancaman nyata!',
+    terminal: `<span class="prompt">$ # Contoh query SQL di balik login form:</span>
+SELECT * FROM users 
+WHERE username='[INPUT]' AND password='[INPUT]';
+
+<span class="comment"># Query ini rentan! Jika input tidak disanitasi...</span>
+<span class="prompt">$ # Payload klasik SQL Injection:</span>
+Username: admin'--
+Password: apapun
+
+<span class="comment"># Hasilnya query menjadi:</span>
+SELECT * FROM users WHERE username='admin'--' AND password='apapun';
+<span class="comment"># -- adalah comment di SQL, sisanya diabaikan!</span>
+<span class="comment"># Flag: Apa karakter yang digunakan untuk memulai comment di SQL?</span>`,
+    hints: [
+      '💡 SQL Injection bekerja dengan menyisipkan karakter spesial SQL ke dalam input yang tidak divalidasi.',
+      '💡 Karakter kunci: tanda kutip tunggal (apostrophe) untuk keluar dari string, lalu -- untuk comment.',
+      '💡 Flag = HackLearnCTF{SQLI_BYPASS} — jika kamu paham cara kerja bypass ini!'
+    ],
+    flag: 'HackLearnCTF{SQLI_BYPASS}'
+  },
+  {
+    id: 'c6',
+    title: 'Hex to ASCII',
+    category: 'FORENSICS',
+    catClass: 'cat-forensics',
+    points: 125,
+    difficulty: 'medium',
+    desc: 'File yang dicurigai mengandung pesan tersembunyi dalam format hexadecimal. Investigator forensik digital sering menemukan data dalam format hex — bisakah kamu mendekode pesan ini?',
+    terminal: `<span class="prompt">$ xxd suspicious_file.dat | head</span>
+48 61 63 6b 4c 65 61 72 6e 43 54 46 7b 48 45 58
+5f 4d 41 53 54 45 52 5f 48 41 43 4b 45 52 7d
+
+<span class="comment"># Setiap pasangan hex = 1 byte = 1 karakter ASCII</span>
+<span class="comment"># 48 = 72 desimal = 'H'</span>
+<span class="comment"># 61 = 97 desimal = 'a'</span>
+<span class="comment"># Gunakan: rapidtables.com/convert/number/hex-to-ascii.html</span>
+<span class="prompt">$ </span>`,
+    hints: [
+      '💡 Hexadecimal menggunakan basis 16 (0-9, A-F). Setiap dua karakter hex = satu byte.',
+      '💡 Karakter pertama: 48 hex = 72 desimal = "H", lalu 61 = "a", 63 = "c"...',
+      '💡 Paste semua hex ke converter online. Hasilnya langsung terbaca sebagai teks!'
+    ],
+    flag: 'HackLearnCTF{HEX_MASTER_HACKER}'
+  }
+];
+
+let ctfSolved = JSON.parse(localStorage.getItem('hacklearn-ctf-solved') || '[]');
+let ctfPoints = parseInt(localStorage.getItem('hacklearn-ctf-points') || '0');
+let ctfActive = 0;
+
+function ctfRank(pts) {
+  if(pts >= 500) return '🔴 Elite Hacker';
+  if(pts >= 300) return '🟠 Advanced';
+  if(pts >= 150) return '🟡 Intermediate';
+  if(pts >= 50)  return '🟢 Beginner';
+  return '⚪ Newbie';
+}
+
+function renderCTF() {
+  // sidebar
+  const sb = document.getElementById('ctf-sidebar');
+  sb.innerHTML = ctfChallenges.map((ch, i) => `
+    <button class="ctf-challenge-btn ${i===ctfActive?'active':''} ${ctfSolved.includes(ch.id)?'solved':''}"
+      onclick="selectCTF(${i})">
+      <div class="ctf-ch-title">${ch.title}</div>
+      <div class="ctf-ch-cat">${ch.category}</div>
+      <div class="ctf-ch-pts ${ch.difficulty}">+${ch.points} pts</div>
+    </button>
+  `).join('');
+
+  // main
+  renderCTFMain(ctfActive);
+
+  // score
+  document.getElementById('ctf-total-pts').textContent = ctfPoints + ' pts';
+  document.getElementById('ctf-solved-count').textContent = ctfSolved.length + ' / ' + ctfChallenges.length + ' solved';
+  document.getElementById('ctf-rank').textContent = ctfRank(ctfPoints);
+}
+
+function selectCTF(idx) {
+  ctfActive = idx;
+  renderCTF();
+}
+
+function renderCTFMain(idx) {
+  const ch = ctfChallenges[idx];
+  const isSolved = ctfSolved.includes(ch.id);
+  document.getElementById('ctf-main').innerHTML = `
+    <div class="ctf-main-header">
+      <div>
+        <span class="ctf-category-badge ${ch.catClass}">${ch.category}</span>
+        <span style="margin-left:10px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted);">+${ch.points} pts</span>
+      </div>
+      <span style="font-size:11px;color:var(--muted);font-family:'Share Tech Mono',monospace;">${ch.difficulty.toUpperCase()}</span>
+    </div>
+    <div class="ctf-body">
+      <h2 style="font-size:20px;font-weight:800;margin-bottom:10px;">${ch.title}</h2>
+      <p class="ctf-desc">${ch.desc.replace(/\n/g,'<br>')}</p>
+
+      <div class="ctf-terminal">
+        <div class="ctf-terminal-bar">
+          <div class="term-dot r"></div>
+          <div class="term-dot y"></div>
+          <div class="term-dot g"></div>
+          <span style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);margin-left:8px;">terminal — bash</span>
+        </div>
+        <div class="ctf-terminal-body">${ch.terminal}</div>
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <div style="font-size:12px;color:var(--muted);margin-bottom:8px;font-family:'Share Tech Mono',monospace;">// HINTS (klik untuk buka)</div>
+        ${ch.hints.map((h,i) => `
+          <button class="hint-btn" onclick="toggleHint('hint-${idx}-${i}', this)">
+            🔒 Hint ${i+1} ${i===0?'(gratis)':'(-10 pts jika dipakai)'}
+          </button>
+          <div class="hint-content" id="hint-${idx}-${i}">${h}</div>
+        `).join('')}
+      </div>
+
+      ${isSolved ? `
+        <div class="solved-overlay">
+          <div style="font-size:32px;margin-bottom:8px;">🎉</div>
+          <div style="font-size:18px;font-weight:800;color:var(--green);">Tantangan Selesai!</div>
+          <div style="color:var(--muted);font-size:13px;margin-top:6px;">+${ch.points} poin telah ditambahkan ke skormu</div>
+        </div>
+      ` : `
+        <div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px;font-family:'Share Tech Mono',monospace;">// SUBMIT FLAG</div>
+          <div class="ctf-flag-wrap">
+            <input class="ctf-flag-input" id="ctf-flag-input-${idx}" placeholder="HackLearnCTF{...}" 
+              onkeydown="if(event.key==='Enter')submitFlag(${idx})">
+            <button class="submit-flag-btn" onclick="submitFlag(${idx})">Submit Flag ▶</button>
+          </div>
+          <div id="ctf-flag-feedback-${idx}"></div>
+        </div>
+      `}
+    </div>
+  `;
+}
+
+function toggleHint(id, btn) {
+  const el = document.getElementById(id);
+  if(el.classList.contains('visible')) {
+    el.classList.remove('visible');
+    btn.textContent = btn.textContent.replace('🔓','🔒');
+  } else {
+    el.classList.add('visible');
+    btn.textContent = btn.textContent.replace('🔒','🔓');
+  }
+}
+
+function submitFlag(idx) {
+  const ch = ctfChallenges[idx];
+  const input = document.getElementById(`ctf-flag-input-${idx}`);
+  const feedback = document.getElementById(`ctf-flag-feedback-${idx}`);
+  const val = input.value.trim();
+
+  if(val.toLowerCase() === ch.flag.toLowerCase()) {
+    // Benar!
+    input.classList.add('correct-flag');
+    ctfSolved.push(ch.id);
+    ctfPoints += ch.points;
+    localStorage.setItem('hacklearn-ctf-solved', JSON.stringify(ctfSolved));
+    localStorage.setItem('hacklearn-ctf-points', ctfPoints);
+    setTimeout(() => renderCTF(), 600);
+  } else {
+    // Salah
+    input.classList.remove('wrong-flag');
+    void input.offsetWidth; // trigger reflow for animation restart
+    input.classList.add('wrong-flag');
+    feedback.innerHTML = `<div class="flag-feedback err">❌ Flag salah! Cek kembali format HackLearnCTF{...} dan pastikan huruf besar/kecil benar.</div>`;
+    setTimeout(() => input.classList.remove('wrong-flag'), 400);
+  }
+}
+
+// Init CTF
+renderCTF();
+
+
+</script>
+
+<!-- FOOTER PENCIPTA -->
+<footer style="
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  text-align:center;
+  padding:20px 24px;
+  margin-top:40px;
+  font-family:'Share Tech Mono',monospace;
+  font-size:13px;
+  color:var(--muted);
+  position:relative;
+  z-index:1;
+">
+  <span style="color:var(--green);">// </span>
+  Dibuat oleh 
+  <span style="color:var(--cyan); font-weight:700;">Geraldus Asca Pratama</span>
+  <span style="color:var(--muted);"> &nbsp;|&nbsp; </span>
+  <span style="color:var(--green);">© 2026</span>
+  <span style="color:var(--muted);"> &nbsp;·&nbsp; HackLearn Platform</span>
+</footer>
+
+</body>
+</html>
